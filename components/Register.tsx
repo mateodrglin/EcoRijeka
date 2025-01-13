@@ -20,63 +20,65 @@ export default function Register() {
       <Text style={styles.title}>Registracija</Text>
 
       {/* Form Fields */}
-      <TextInput
-        placeholder="Korisničko ime"
-        placeholderTextColor="#A9A9A9"
-        style={styles.input}
-      />
-      <TextInput placeholder="Ime" placeholderTextColor="#A9A9A9" style={styles.input} />
-      <TextInput placeholder="Prezime" placeholderTextColor="#A9A9A9" style={styles.input} />
-      <TextInput placeholder="Adresa" placeholderTextColor="#A9A9A9" style={styles.input} />
-      <TextInput placeholder="Email" placeholderTextColor="#A9A9A9" style={styles.input} />
-      <TextInput
-        placeholder="Broj mobitela"
-        placeholderTextColor="#A9A9A9"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Lozinka"
-        placeholderTextColor="#A9A9A9"
-        secureTextEntry
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Potvrda lozinke"
-        placeholderTextColor="#A9A9A9"
-        secureTextEntry
-        style={styles.input}
-      />
+      <View style={styles.formContainer}>
+        <TextInput
+          placeholder="Korisničko ime"
+          placeholderTextColor="#A9A9A9"
+          style={styles.input}
+        />
+        <TextInput placeholder="Ime" placeholderTextColor="#A9A9A9" style={styles.input} />
+        <TextInput placeholder="Prezime" placeholderTextColor="#A9A9A9" style={styles.input} />
+        <TextInput placeholder="Adresa" placeholderTextColor="#A9A9A9" style={styles.input} />
+        <TextInput placeholder="Email" placeholderTextColor="#A9A9A9" style={styles.input} />
+        <TextInput
+          placeholder="Broj mobitela"
+          placeholderTextColor="#A9A9A9"
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Lozinka"
+          placeholderTextColor="#A9A9A9"
+          secureTextEntry
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Potvrda lozinke"
+          placeholderTextColor="#A9A9A9"
+          secureTextEntry
+          style={styles.input}
+        />
 
-      {/* Register Button */}
-      <TouchableOpacity style={styles.registerButton}>
-        <Text style={styles.registerButtonText}>Registracija</Text>
-      </TouchableOpacity>
-
-      {/* Continue with */}
-      <Text style={styles.orText}>ili nastavi sa</Text>
-      <View style={styles.socialButtons}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Image
-            source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
-            style={styles.socialIcon}
-          />
-          <Text style={styles.socialText}>Google</Text>
+        {/* Register Button */}
+        <TouchableOpacity style={styles.registerButton}>
+          <Text style={styles.registerButtonText}>Registracija</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <Image
-            source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
-            style={styles.socialIcon}
-          />
-          <Text style={styles.socialText}>Facebook</Text>
+
+        {/* Continue with */}
+        <Text style={styles.orText}>ili nastavi sa</Text>
+        <View style={styles.socialButtons}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialText}>Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialText}>Facebook</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Already Have an Account */}
+        <TouchableOpacity onPress={() => console.log("Go to Login")}>
+          <Text style={styles.loginText}>
+            Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
+          </Text>
         </TouchableOpacity>
       </View>
-
-      {/* Already Have an Account */}
-      <TouchableOpacity onPress={() => console.log("Go to Login")}>
-        <Text style={styles.loginText}>
-          Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -102,6 +104,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 30,
+  },
+  formContainer: {
+    width: "100%",
+    maxWidth: 400, // Optional: limits form container width for better visual
+    padding: 20,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5, // For Android shadow
   },
   input: {
     width: "100%",
