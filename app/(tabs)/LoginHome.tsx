@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,58 +7,40 @@ import {
   ImageBackground,
   Image,
 } from "react-native";
-import Login from "../../components/Login"; // Correct import path
-import Register from "../../components/Register"; // Correct import path
+import { useRouter } from "expo-router";
 
 export default function LoginHome() {
-  const [isRegister, setIsRegister] = useState(false); // Toggle between Login and Register
-  const [showForm, setShowForm] = useState(false); // Control visibility of the form
+  const router = useRouter(); // Initialize router for navigation
 
   return (
     <ImageBackground
-      source={require("../../assets/images/Login.png")} // Correct background image path
+      source={require("../../assets/images/Login.png")} // Background image
       style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.container}>
-        {/* Always Display the Logo */}
+        {/* Logo */}
         <Image
-          source={require("../../assets/images/logo.png")} // Correct path to logo
+          source={require("../../assets/images/logo.png")} // Logo image path
           style={styles.logo}
         />
         <Text style={styles.title}>EcoRijeka</Text>
 
-        {/* Show the form when the user clicks one of the buttons */}
-        {showForm && (
-          <View style={styles.formContainer}>
-            {isRegister ? <Register /> : <Login />}
-          </View>
-        )}
+        {/* Login Button */}
+        <TouchableOpacity
+          style={styles.buttonPrimary}
+          onPress={() => router.push("/Login")} // Navigate to Login screen
+        >
+          <Text style={styles.buttonText}>Prijava</Text>
+        </TouchableOpacity>
 
-        {/* Toggle Buttons for Login and Register */}
-        {!showForm && (
-          <>
-            <TouchableOpacity
-              style={styles.buttonPrimary}
-              onPress={() => {
-                setIsRegister(false); // Ensure it's set to Login when "Prijava" is clicked
-                setShowForm(true); // Show the Login form
-              }}
-            >
-              <Text style={styles.buttonText}>Prijava</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.buttonSecondary}
-              onPress={() => {
-                setIsRegister(true); // Ensure it's set to Register when "Registracija" is clicked
-                setShowForm(true); // Show the Register form
-              }}
-            >
-              <Text style={styles.buttonSecondaryText}>Registracija</Text>
-            </TouchableOpacity>
-          </>
-        )}
+        {/* Register Button */}
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={() => router.push("/Register")} // Navigate to Register screen
+        >
+          <Text style={styles.buttonSecondaryText}>Registracija</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -86,18 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 30,
     color: "#000000",
-  },
-  formContainer: {
-    width: "100%",
-    maxWidth: 400, // Optional: limits form container width for better visual
-    padding: 20,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5, // For Android shadow
   },
   buttonPrimary: {
     backgroundColor: "#66BB6A",

@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -8,9 +9,16 @@ import {
   Image,
 } from "react-native";
 
-export default function App() {
+export default function Login() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
+      {/* Logo */}
+      <Image
+        source={require("../assets/images/logo.png")} // Adjust the path to your logo
+        style={styles.logo}
+      />
       <Text style={styles.title}>Prijava</Text>
 
       {/* Email Input */}
@@ -43,14 +51,18 @@ export default function App() {
       <View style={styles.socialButtons}>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
+            source={{
+              uri: "https://img.icons8.com/color/48/000000/google-logo.png",
+            }}
             style={styles.socialIcon}
           />
           <Text style={styles.socialText}>Google</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
+            source={{
+              uri: "https://img.icons8.com/color/48/000000/facebook.png",
+            }}
             style={styles.socialIcon}
           />
           <Text style={styles.socialText}>Facebook</Text>
@@ -58,7 +70,7 @@ export default function App() {
       </View>
 
       {/* Register Link */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("/Register")}>
         <Text style={styles.registerText}>
           Nemate račun? <Text style={styles.registerLink}>Registriraj se</Text>
         </Text>
@@ -74,6 +86,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,

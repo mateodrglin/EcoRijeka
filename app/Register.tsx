@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "expo-router"; // Import useRouter
 import {
   View,
   Text,
@@ -9,12 +10,15 @@ import {
 } from "react-native";
 
 export default function Register() {
+  const router = useRouter(); // Initialize the router
+
   return (
     <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => console.log("Go Back")}>
-        <Text style={styles.backButtonText}>{"<"}</Text>
-      </TouchableOpacity>
+        {/* Logo */}
+        <Image
+          source={require("../assets/images/logo.png")} // Adjust the path to your logo
+          style={styles.logo}
+        />
 
       {/* Title */}
       <Text style={styles.title}>Registracija</Text>
@@ -73,7 +77,7 @@ export default function Register() {
         </View>
 
         {/* Already Have an Account */}
-        <TouchableOpacity onPress={() => console.log("Go to Login")}>
+        <TouchableOpacity onPress={() => router.push("/Login")}>
           <Text style={styles.loginText}>
             Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
           </Text>
@@ -87,13 +91,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+    justifyContent: "center", // Center content vertically
+    alignItems: "center", // Center content horizontally
     paddingHorizontal: 20,
-    justifyContent: "center",
+    position: "relative", // Ensure proper placement of the back button
   },
-  backButton: {
-    position: "absolute",
-    top: 50,
-    left: 20,
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
   },
   backButtonText: {
     fontSize: 18,
