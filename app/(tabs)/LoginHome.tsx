@@ -24,8 +24,6 @@ export default function LoginHome() {
           source={require("../../assets/images/logo.png")} // Logo image path
           style={styles.logo}
         />
-        <Text style={styles.title}>EcoRijeka</Text>
-
         {/* Login Button */}
         <TouchableOpacity
           style={styles.buttonPrimary}
@@ -59,8 +57,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 220,
+    height: 220,
     marginBottom: 20,
   },
   title: {

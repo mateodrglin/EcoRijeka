@@ -7,11 +7,15 @@ import {
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useRouter } from "expo-router"; // Import the router
 
 export default function Explore() {
-  const menuItems = [
-    { name: "Početna", icon: "home-outline" },
-    { name: "Kalendar", icon: "calendar-month-outline" },
+  const router = useRouter(); // Initialize the router
+
+  // Define strict types for menu items
+  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" }[] = [
+    { name: "Početna", icon: "home-outline", route: "/" },
+    { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" }, // Add route for Kalendar
     { name: "Savjeti recikliranja", icon: "lightbulb-outline" },
     { name: "Događaji", icon: "account-outline" },
     { name: "Usluge odvoza", icon: "truck-outline" },
@@ -20,9 +24,12 @@ export default function Explore() {
     { name: "Postavke", icon: "cog-outline" },
   ];
 
-  const handlePress = (item: string) => {
-    console.log(`Navigating to ${item}`);
-    // Add navigation logic here if needed
+  const handlePress = (item: { name: string; route?: string }) => {
+    if (item.route) {
+      router.push(item.route); // Navigate to the specified route
+    } else {
+      console.log(`Navigating to ${item.name}`);
+    }
   };
 
   return (
@@ -33,7 +40,7 @@ export default function Explore() {
           <TouchableOpacity
             key={index}
             style={styles.menuItem}
-            onPress={() => handlePress(item.name)}
+            onPress={() => handlePress(item)}
           >
             <Icon name={item.icon} size={24} color="#6e6e6e" />
             <Text style={styles.menuText}>{item.name}</Text>
