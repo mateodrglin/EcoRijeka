@@ -1,3 +1,4 @@
+import React from 'react'; // Explicitly import React
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 

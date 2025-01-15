@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "expo-router"; // Import useRouter
 import {
+  ScrollView,
   View,
   Text,
   TextInput,
@@ -13,97 +14,107 @@ export default function Register() {
   const router = useRouter(); // Initialize the router
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
         {/* Logo */}
         <Image
           source={require("../assets/images/logo.png")} // Adjust the path to your logo
           style={styles.logo}
         />
 
-      {/* Title */}
-      <Text style={styles.title}>Registracija</Text>
+        {/* Title */}
+        <Text style={styles.title}>Registracija</Text>
 
-      {/* Form Fields */}
-      <View style={styles.formContainer}>
-        <TextInput
-          placeholder="Korisničko ime"
-          placeholderTextColor="#A9A9A9"
-          style={styles.input}
-        />
-        <TextInput placeholder="Ime" placeholderTextColor="#A9A9A9" style={styles.input} />
-        <TextInput placeholder="Prezime" placeholderTextColor="#A9A9A9" style={styles.input} />
-        <TextInput placeholder="Adresa" placeholderTextColor="#A9A9A9" style={styles.input} />
-        <TextInput placeholder="Email" placeholderTextColor="#A9A9A9" style={styles.input} />
-        <TextInput
-          placeholder="Broj mobitela"
-          placeholderTextColor="#A9A9A9"
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Lozinka"
-          placeholderTextColor="#A9A9A9"
-          secureTextEntry
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Potvrda lozinke"
-          placeholderTextColor="#A9A9A9"
-          secureTextEntry
-          style={styles.input}
-        />
+        {/* Form Fields */}
+        <View style={styles.formContainer}>
+          <TextInput
+            placeholder="Korisničko ime"
+            placeholderTextColor="#A9A9A9"
+            style={styles.input}
+          />
+          <TextInput placeholder="Ime" placeholderTextColor="#A9A9A9" style={styles.input} />
+          <TextInput
+            placeholder="Prezime"
+            placeholderTextColor="#A9A9A9"
+            style={styles.input}
+          />
+          <TextInput placeholder="Adresa" placeholderTextColor="#A9A9A9" style={styles.input} />
+          <TextInput placeholder="Email" placeholderTextColor="#A9A9A9" style={styles.input} />
+          <TextInput
+            placeholder="Broj mobitela"
+            placeholderTextColor="#A9A9A9"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Lozinka"
+            placeholderTextColor="#A9A9A9"
+            secureTextEntry
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Potvrda lozinke"
+            placeholderTextColor="#A9A9A9"
+            secureTextEntry
+            style={styles.input}
+          />
 
-        {/* Register Button */}
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Registracija</Text>
-        </TouchableOpacity>
-
-        {/* Continue with */}
-        <Text style={styles.orText}>ili nastavi sa</Text>
-        <View style={styles.socialButtons}>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialText}>Google</Text>
+          {/* Register Button */}
+          <TouchableOpacity style={styles.registerButton}>
+            <Text style={styles.registerButtonText}>Registracija</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.socialButton}>
-            <Image
-              source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
-              style={styles.socialIcon}
-            />
-            <Text style={styles.socialText}>Facebook</Text>
+
+          {/* Continue with */}
+          <Text style={styles.orText}>ili nastavi sa</Text>
+          <View style={styles.socialButtons}>
+            <TouchableOpacity style={styles.socialButton}>
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/color/48/000000/google-logo.png",
+                }}
+                style={styles.socialIcon}
+              />
+              <Text style={styles.socialText}>Google</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton}>
+              <Image
+                source={{
+                  uri: "https://img.icons8.com/color/48/000000/facebook.png",
+                }}
+                style={styles.socialIcon}
+              />
+              <Text style={styles.socialText}>Facebook</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Already Have an Account */}
+          <TouchableOpacity onPress={() => router.push("/Login")}>
+            <Text style={styles.loginText}>
+              Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
+            </Text>
           </TouchableOpacity>
         </View>
-
-        {/* Already Have an Account */}
-        <TouchableOpacity onPress={() => router.push("/Login")}>
-          <Text style={styles.loginText}>
-            Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
-          </Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center", // Center content vertically
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center", // Center content vertically when no scrolling
     alignItems: "center", // Center content horizontally
     paddingHorizontal: 20,
-    position: "relative", // Ensure proper placement of the back button
+    backgroundColor: "#FFFFFF",
+  },
+  container: {
+    width: "100%",
+    maxWidth: 400, // Optional: limits form container width for better visual
+    alignItems: "center", // Center the logo and title
   },
   logo: {
     width: 200,
     height: 200,
     marginBottom: 20,
-  },
-  backButtonText: {
-    fontSize: 18,
-    color: "#000000",
   },
   title: {
     fontSize: 24,
@@ -113,15 +124,11 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: "100%",
-    maxWidth: 400, // Optional: limits form container width for better visual
-    padding: 20,
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5, // For Android shadow
+    padding: 20,
+    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", // For web
+    elevation: 5,
   },
   input: {
     width: "100%",
