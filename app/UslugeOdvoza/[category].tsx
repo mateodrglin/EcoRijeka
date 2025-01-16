@@ -6,22 +6,36 @@ export default function Category() {
   const router = useRouter();
   const { category } = useLocalSearchParams<{ category: string }>();
 
+  // Map category values to full names
+  const categoryNames: Record<string, string> = {
+    opasni: "Opasni Otpad",
+    glomazni: "Glomazni Otpad",
+    etpad: "E-otpad",
+    gradjevinski: "Građevinski Otpad",
+    automobilski: "Automobilski Dijelovi",
+    medicinski: "Medicinski Otpad",
+    biootpad: "Biootpad",
+    ulja: "Otpadna Ulja",
+  };
+
   const companies: Record<string, { id: string; name: string }[]> = {
     opasni: [
       { id: "kemis", name: "KEMIS-Termoclean" },
       { id: "metis", name: "METIS d.d" },
     ],
     glomazni: [
-      { id: "company1", name: "Glomazni 1" },
-      { id: "company2", name: "Glomazni 2" },
+      { id: "company1", name: "Glomazni Company 1" },
+      { id: "company2", name: "Glomazni Company 2" },
     ],
-
+    // Add other categories if needed
   };
+
+  const categoryName = categoryNames[category || ""] || category?.toUpperCase();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{category?.toUpperCase()}</Text>
-      {companies[category]?.map((company: { id: string; name: string }) => (
+      <Text style={styles.title}>{categoryName}</Text>
+      {companies[category]?.map((company) => (
         <TouchableOpacity
           key={company.id}
           onPress={() =>
