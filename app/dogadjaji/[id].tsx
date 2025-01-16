@@ -1,12 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function EventDetails() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  // Define event details for each event
   const events: Record<
     string,
     {
@@ -17,6 +24,8 @@ export default function EventDetails() {
       location: {
         name: string;
         address: string;
+        latitude: number;
+        longitude: number;
       };
       organizer: string;
     }
@@ -30,6 +39,8 @@ export default function EventDetails() {
       location: {
         name: "Park Mlaka",
         address: "Mlaka 12, 51000, Rijeka",
+        latitude: 45.3345,
+        longitude: 14.4352,
       },
       organizer: "Zelena Rijeka",
     },
@@ -42,6 +53,8 @@ export default function EventDetails() {
       location: {
         name: "Gradski trg",
         address: "Trg Republike, 51000, Rijeka",
+        latitude: 45.3271,
+        longitude: 14.4426,
       },
       organizer: "Eco Rijeka",
     },
@@ -56,6 +69,20 @@ export default function EventDetails() {
       </View>
     );
   }
+
+  const handleOpenMaps = () => {
+    const { latitude, longitude } = event.location;
+    const url = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert("Greška", "Ne mogu otvoriti Google Maps.");
+        }
+      })
+      .catch((err) => Alert.alert("Greška", err.message));
+  };
 
   return (
     <View style={styles.container}>
@@ -72,6 +99,9 @@ export default function EventDetails() {
       <View style={styles.infoContainer}>
         <Text style={styles.infoTitle}>📍 {event.location.name}</Text>
         <Text style={styles.infoText}>{event.location.address}</Text>
+        <TouchableOpacity onPress={handleOpenMaps}>
+          <Text style={styles.mapLink}>Otvori lokaciju u Google Maps</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Event Description */}
@@ -126,6 +156,12 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 14,
     color: "#6e6e6e",
+  },
+  mapLink: {
+    fontSize: 14,
+    color: "#1E90FF",
+    textDecorationLine: "underline",
+    marginTop: 10,
   },
   description: {
     fontSize: 16,
