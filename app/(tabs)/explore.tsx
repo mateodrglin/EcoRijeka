@@ -13,11 +13,11 @@ import { useRouter } from "expo-router";
 export default function Explore() {
   const router = useRouter();
 
-  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" | "SavjetiRecikliranja" | "UslugeOdvoza" }[] = [
+  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" | "SavjetiRecikliranja" | "UslugeOdvoza" | "dogadjaji" }[] = [
     { name: "Početna", icon: "home-outline", route: "/" },
     { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" },
     { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "/SavjetiRecikliranja" },
-    { name: "Događaji", icon: "account-outline" },
+    { name: "Događaji", icon: "account-outline", route: "/dogadjaji"},
     { name: "Usluge odvoza", icon: "truck-outline", route: "/UslugeOdvoza" },
     { name: "Poruke", icon: "message-outline" },
     { name: "Obavijesti", icon: "bell-outline" },
@@ -34,7 +34,6 @@ export default function Explore() {
 
   return (
     <View style={styles.container}>
-      {/* Add a picture at the top */}
       <Image
         source={require("@/assets/images/EcoRijeka.png")}
         style={styles.headerImage}
