@@ -8,18 +8,17 @@ import {
   Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useRouter } from "expo-router"; // Import the router
+import { useRouter } from "expo-router";
 
 export default function Explore() {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
-  // Define strict types for menu items
-  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" | "SavjetiRecikliranja" }[] = [
+  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" | "SavjetiRecikliranja" | "UslugeOdvoza" }[] = [
     { name: "Početna", icon: "home-outline", route: "/" },
-    { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" }, // Add route for Kalendar
-    { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "SavjetiRecikliranja" },
+    { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" },
+    { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "/SavjetiRecikliranja" },
     { name: "Događaji", icon: "account-outline" },
-    { name: "Usluge odvoza", icon: "truck-outline" },
+    { name: "Usluge odvoza", icon: "truck-outline", route: "/UslugeOdvoza" },
     { name: "Poruke", icon: "message-outline" },
     { name: "Obavijesti", icon: "bell-outline" },
     { name: "Postavke", icon: "cog-outline" },
@@ -27,7 +26,7 @@ export default function Explore() {
 
   const handlePress = (item: { name: string; route?: string }) => {
     if (item.route) {
-      router.push(item.route); // Navigate to the specified route
+      router.push(item.route);
     } else {
       console.log(`Navigating to ${item.name}`);
     }
@@ -37,13 +36,13 @@ export default function Explore() {
     <View style={styles.container}>
       {/* Add a picture at the top */}
       <Image
-        source={require("@/assets/images/EcoRijeka.png")} // Adjust the path to your image
+        source={require("@/assets/images/EcoRijeka.png")}
         style={styles.headerImage}
-        resizeMode="cover" // Ensures the image scales properly
+        resizeMode="cover"
       />
 
       {/* Render Navigation Menu */}
-      <ScrollView style={styles.menu}>
+      <ScrollView contentContainerStyle={styles.menu}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -69,16 +68,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingVertical: 20,
   },
   headerImage: {
     width: "100%",
-    height: 200, 
+    height: 200,
     marginBottom: 10, 
   },
   menu: {
     flex: 1,
     paddingHorizontal: 10,
+    marginTop: -10, 
   },
   menuItem: {
     flexDirection: "row",
