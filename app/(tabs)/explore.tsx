@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router"; // Import the router
@@ -13,10 +14,10 @@ export default function Explore() {
   const router = useRouter(); // Initialize the router
 
   // Define strict types for menu items
-  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" }[] = [
+  const menuItems: { name: string; icon: string; route?: "/Kalendar" | "/Register" | "/Login" | "/" | "SavjetiRecikliranja" }[] = [
     { name: "Početna", icon: "home-outline", route: "/" },
     { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" }, // Add route for Kalendar
-    { name: "Savjeti recikliranja", icon: "lightbulb-outline" },
+    { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "SavjetiRecikliranja" },
     { name: "Događaji", icon: "account-outline" },
     { name: "Usluge odvoza", icon: "truck-outline" },
     { name: "Poruke", icon: "message-outline" },
@@ -34,6 +35,13 @@ export default function Explore() {
 
   return (
     <View style={styles.container}>
+      {/* Add a picture at the top */}
+      <Image
+        source={require("@/assets/images/EcoRijeka.png")} // Adjust the path to your image
+        style={styles.headerImage}
+        resizeMode="cover" // Ensures the image scales properly
+      />
+
       {/* Render Navigation Menu */}
       <ScrollView style={styles.menu}>
         {menuItems.map((item, index) => (
@@ -62,6 +70,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingVertical: 20,
+  },
+  headerImage: {
+    width: "100%",
+    height: 200, 
+    marginBottom: 10, 
   },
   menu: {
     flex: 1,
