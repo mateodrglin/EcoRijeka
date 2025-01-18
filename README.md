@@ -1,2 +1,3 @@
 # EcoRijeka
- 
+
+Link za aplikaciju

@@ -67,32 +67,37 @@ export default function Home() {
         <View style={styles.content}>
           {/* First Box: Last 3 Events */}
           <View style={styles.box}>
-            <Text style={styles.boxTitle}>Provjeri događaje</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {events.map((event) => (
-                <TouchableOpacity
-                  key={event.id}
-                  style={styles.eventCard}
-                  onPress={() => router.push(`/dogadjaji/edit/${event.id}`)}
-                >
-                  <Image
-                    source={{ uri: event.imageUrl || "https://via.placeholder.com/120" }}
-                    style={styles.eventImage}
-                  />
-                  <Text style={styles.eventTitle}>{event.title}</Text>
-                  <Text style={styles.eventDetails}>{event.date}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+  <Text style={styles.boxTitle}>Provjeri događaje</Text>
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.horizontalScrollContainer} // Ensure proper spacing
+  >
+    {events.map((event) => (
+      <TouchableOpacity
+        key={event.id}
+        style={styles.eventCard}
+        onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} // Redirect to event details
+      >
+        <Image
+          source={{ uri: event.imageUrl || "https://via.placeholder.com/120" }}
+          style={styles.eventImage}
+        />
+        <Text style={styles.eventTitle}>{event.title}</Text>
+        <Text style={styles.eventDetails}>{event.date}</Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
 
-            {/* Button to Show All Events */}
-            <TouchableOpacity
-              style={styles.showAllButton}
-              onPress={() => router.push("/dogadjaji")}
-            >
-              <Text style={styles.showAllButtonText}>Prikaži sve događaje</Text>
-            </TouchableOpacity>
-          </View>
+  {/* Button to Show All Events */}
+  <TouchableOpacity
+    style={styles.showAllButton}
+    onPress={() => router.push("/dogadjaji")}
+  >
+    <Text style={styles.showAllButtonText}>Prikaži sve događaje</Text>
+  </TouchableOpacity>
+</View>
+
 
           {/* Second Box: Calendar */}
           <View style={styles.box}>
@@ -129,13 +134,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    position: "absolute", // Makes the background fixed and stationary
+    position: "absolute", 
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-    zIndex: -1, // Ensures the background stays behind everything
+    zIndex: -1, 
   },
   scrollContainer: {
     flexGrow: 1,
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    backgroundColor: "rgba(245, 245, 245, 0.9)", // Optional semi-transparent header
+    backgroundColor: "rgba(245, 245, 245, 0.9)", 
   },
   logo: {
     width: 140,
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   box: {
-    backgroundColor: "rgba(245, 245, 245, 0.9)", // Optional semi-transparent box
+    backgroundColor: "rgba(245, 245, 245, 0.9)", 
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
@@ -177,7 +182,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   singleCalendarImage: {
-    width: "100%", // Ensures full-width calendar
+    width: "100%", 
     height: 120,
     resizeMode: "contain",
     borderRadius: 10,
@@ -188,17 +193,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#6e6e6e",
   },
+  horizontalScrollContainer: {
+    paddingHorizontal: 10, 
+  },
   eventCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    marginRight: 10,
+    marginRight: 10, 
     width: 160,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
+    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", 
   },
+  
+  
   eventImage: {
     width: "100%",
     height: 100,
@@ -216,6 +223,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
+  
   showAllButton: {
     backgroundColor: "#66BB6A",
     marginTop: 15,
@@ -240,4 +248,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  
 });
