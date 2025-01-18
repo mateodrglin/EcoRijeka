@@ -12,6 +12,7 @@ import {
 import { useRouter } from "expo-router";
 import { auth } from "../firebaseConfig"; // Import Firebase auth instance
 import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase method for registration
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Import Firestore methods
 
 export default function Register() {
   const router = useRouter();
@@ -31,31 +32,45 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
-    const { email, password, confirmPassword } = formData;
-  
+    const { username, firstName, lastName, address, email, phone, password, confirmPassword } = formData;
+
     // Validation: Ensure passwords match
     if (password !== confirmPassword) {
       Alert.alert("Greška", "Lozinke se ne podudaraju!");
       return;
     }
-  
-    // Validation: Ensure email and password are not empty
-    if (!email || !password) {
-      Alert.alert("Greška", "Molimo unesite važeći email i lozinku.");
+
+    // Validation: Ensure all required fields are filled
+    if (!email || !password || !username || !firstName || !lastName || !address || !phone) {
+      Alert.alert("Greška", "Molimo ispunite sva polja.");
       return;
     }
-  
+
     try {
-      // Firebase registration logic
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save user data to Firestore
+      const db = getFirestore();
+      await setDoc(doc(db, "users", user.uid), {
+        username,
+        firstName,
+        lastName,
+        address,
+        email,
+        phone,
+        role: "user", // Default role is "user"
+        createdAt: new Date(),
+      });
+
       Alert.alert("Registracija uspješna!", "Vaš račun je kreiran.");
-      router.push("/Login"); // Redirect to login screen after successful registration
+      router.push("/Login"); // Redirect to login screen after registration
     } catch (error: any) {
       console.error("Registration Error:", error);
       Alert.alert("Greška", error.message || "Došlo je do greške prilikom registracije.");
     }
   };
-  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
