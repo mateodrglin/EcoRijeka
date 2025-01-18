@@ -26,25 +26,24 @@ export default function AddEvent() {
   // Fetch user role to ensure only admins can access
   useEffect(() => {
     const fetchRole = async () => {
-        const db = getFirestore();
-        const user = auth.currentUser;
-      
-        if (user) {
-          try {
-            console.log("User ID:", user.uid); // Log user ID
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            console.log("User Document Data:", userDoc.data()); // Log document data
-            const userData = userDoc.data();
-            setRole(userData?.role || "user");
-          } catch (error) {
-            console.error("Error fetching user role:", error);
-            Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
-          }
-        } else {
-          console.log("No user is currently logged in.");
+      const db = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        try {
+          console.log("User ID:", user.uid); // Log user ID
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          console.log("User Document Data:", userDoc.data()); // Log document data
+          const userData = userDoc.data();
+          setRole(userData?.role || "user");
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
         }
-      };
-      
+      } else {
+        console.log("No user is currently logged in.");
+      }
+    };
 
     fetchRole();
   }, []);
@@ -88,6 +87,7 @@ export default function AddEvent() {
     }
   };
 
+  // Check for non-admin access
   if (role !== "admin") {
     return (
       <View style={styles.container}>

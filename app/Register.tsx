@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { auth } from "../firebaseConfig"; // Import Firebase auth instance
-import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase method for registration
-import { getFirestore, doc, setDoc } from "firebase/firestore"; // Import Firestore methods
+import { auth } from "../firebaseConfig"; // Firebase auth instance
+import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase registration method
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Firestore methods
+import { Alert } from "react-native";
 
 export default function Register() {
   const router = useRouter();
@@ -26,31 +26,53 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleInputChange = (name: string, value: string) => {
+    if (name === "phone") {
+      // Allow only numeric characters for phone input
+      value = value.replace(/[^0-9]/g, "");
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRegister = async () => {
-    const { username, firstName, lastName, address, email, phone, password, confirmPassword } = formData;
-
+    const { username, firstName, lastName, address, email, phone, password, confirmPassword } =
+      formData;
+    const validationErrors: string[] = [];
+  
+    // Validation: Check for missing fields
+    if (!username) validationErrors.push("Molimo unesite korisničko ime.");
+    if (!firstName) validationErrors.push("Molimo unesite ime.");
+    if (!lastName) validationErrors.push("Molimo unesite prezime.");
+    if (!address) validationErrors.push("Molimo unesite adresu.");
+    if (!email) validationErrors.push("Molimo unesite email.");
+    if (!phone) validationErrors.push("Molimo unesite broj mobitela.");
+    if (!password) validationErrors.push("Molimo unesite lozinku.");
+    if (!confirmPassword) validationErrors.push("Molimo potvrdite lozinku.");
+  
+    // Validation: Ensure email format is correct
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) validationErrors.push("Molimo unesite ispravnu email adresu.");
+  
+    // Validation: Ensure password length is at least 6 characters
+    if (password && password.length < 6) validationErrors.push("Lozinka mora imati najmanje 6 znakova.");
+  
     // Validation: Ensure passwords match
-    if (password !== confirmPassword) {
-      Alert.alert("Greška", "Lozinke se ne podudaraju!");
+    if (password !== confirmPassword) validationErrors.push("Lozinke se ne podudaraju.");
+  
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
       return;
     }
-
-    // Validation: Ensure all required fields are filled
-    if (!email || !password || !username || !firstName || !lastName || !address || !phone) {
-      Alert.alert("Greška", "Molimo ispunite sva polja.");
-      return;
-    }
-
+  
+    setErrors([]);
+  
     try {
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       // Save user data to Firestore
       const db = getFirestore();
       await setDoc(doc(db, "users", user.uid), {
@@ -63,26 +85,39 @@ export default function Register() {
         role: "user", // Default role is "user"
         createdAt: new Date(),
       });
-
-      Alert.alert("Registracija uspješna!", "Vaš račun je kreiran.");
-      router.push("/Login"); // Redirect to login screen after registration
+  
+      // Show a success message
+      Alert.alert("Registracija uspješna!", "Vaš račun je kreiran. Dobrodošli!");
+      // Stay on the home page instead of redirecting
     } catch (error: any) {
       console.error("Registration Error:", error);
-      Alert.alert("Greška", error.message || "Došlo je do greške prilikom registracije.");
+      setErrors([error.message || "Došlo je do greške prilikom registracije."]);
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {/* Logo */}
         <Image
-          source={require("../assets/images/logo.png")} // Update the path if needed
+          source={require("../assets/images/logo.png")}
           style={styles.logo}
         />
         <Text style={styles.title}>Registracija</Text>
 
         <View style={styles.formContainer}>
+          {/* Error Display */}
+          {errors.length > 0 && (
+            <View style={styles.errorContainer}>
+              {errors.map((error, index) => (
+                <Text key={index} style={styles.errorText}>
+                  {error}
+                </Text>
+              ))}
+            </View>
+          )}
+
           <TextInput
             placeholder="Korisničko ime"
             placeholderTextColor="#A9A9A9"
@@ -121,6 +156,7 @@ export default function Register() {
           <TextInput
             placeholder="Broj mobitela"
             placeholderTextColor="#A9A9A9"
+            keyboardType="numeric"
             value={formData.phone}
             onChangeText={(value) => handleInputChange("phone", value)}
             style={styles.input}
@@ -191,7 +227,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     alignSelf: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
@@ -203,10 +239,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 20,
-    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", 
-    elevation: 5, 
-},
-
+    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)",
+    elevation: 5,
+  },
   input: {
     width: "100%",
     backgroundColor: "#F5F5F5",
@@ -215,6 +250,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
     marginBottom: 15,
+  },
+  errorContainer: {
+    marginBottom: 15,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
   },
   registerButton: {
     backgroundColor: "#66BB6A",

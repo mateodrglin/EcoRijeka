@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRouter } from "expo-router";
 import {
   ScrollView,
   View,
@@ -10,25 +9,32 @@ import {
   Image,
   Alert,
 } from "react-native";
-import { auth } from "../firebaseConfig"; 
+import { useRouter } from "expo-router";
+import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error message
   const router = useRouter();
 
   const handleLogin = async () => {
+    setErrorMessage(null); // Clear error message before login attempt
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert("Prijava uspješna!", "Dobrodošli natrag!");
       router.push("/");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Došlo je do greške.";
-      Alert.alert("Greška", message);
+    } catch (error: any) {
+      // Handle login errors
+      const message =
+        error.code === "auth/user-not-found" || error.code === "auth/wrong-password"
+          ? "Korisničko ime ili lozinka su netočni"
+          : "Korisničko ime ili lozinka su netočni";
+      setErrorMessage(message);
     }
   };
-  
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -53,10 +59,39 @@ export default function Login() {
             secureTextEntry
             style={styles.input}
           />
+          {/* Display error message */}
+          {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+          <TouchableOpacity>
+            <Text style={styles.forgotPasswordText}>Zaboravili lozinku?</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.loginButtonText}>Prijava</Text>
           </TouchableOpacity>
         </View>
+
+        <Text style={styles.orText}>ili nastavi sa</Text>
+        <View style={styles.socialButtons}>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialText}>Google</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.socialButton}>
+            <Image
+              source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
+              style={styles.socialIcon}
+            />
+            <Text style={styles.socialText}>Facebook</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => router.push("/Register")}>
+          <Text style={styles.registerText}>
+            Nemate račun? <Text style={styles.registerLink}>Registriraj se</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -65,19 +100,19 @@ export default function Login() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center", // Centers content vertically when there’s no overflow
-    alignItems: "center", // Centers content horizontally
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: "#FFFFFF",
   },
   container: {
     width: "100%",
-    maxWidth: 400, // Matches the width in Register screen
-    alignItems: "center",
+    maxWidth: 400,
   },
   logo: {
     width: 200,
     height: 200,
+    alignSelf: "center",
     marginBottom: 20,
   },
   title: {
@@ -90,10 +125,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 20,
-    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", 
-    elevation: 5, 
-},
-
+    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)",
+    elevation: 5,
+  },
   input: {
     width: "100%",
     backgroundColor: "#F5F5F5",
@@ -103,10 +137,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 15,
   },
-  forgotPassword: {
+  forgotPasswordText: {
     alignSelf: "flex-end",
+    color: "#6e6e6e",
+    fontSize: 14,
     marginBottom: 20,
-    color: "#000000",
   },
   loginButton: {
     backgroundColor: "#66BB6A",
@@ -156,5 +191,10 @@ const styles = StyleSheet.create({
   registerLink: {
     color: "#66BB6A",
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "#FF6347",
+    fontSize: 14,
+    marginBottom: 10,
   },
 });

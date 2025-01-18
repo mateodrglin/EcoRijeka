@@ -7,9 +7,12 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  Linking,
+  Platform,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { auth } from "../../../firebaseConfig";
 
 export default function EventDetails() {
   const router = useRouter();
@@ -17,8 +20,11 @@ export default function EventDetails() {
   const [eventData, setEventData] = useState({
     title: "",
     date: "",
+    location: "",
+    description: "",
     imageUrl: "",
   });
+  const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,7 +47,24 @@ export default function EventDetails() {
       }
     };
 
+    const fetchUserRole = async () => {
+      const db = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          const userData = userDoc.data();
+          setRole(userData?.role || "user");
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          Alert.alert("Error", "Unable to fetch user role.");
+        }
+      }
+    };
+
     fetchEvent();
+    fetchUserRole();
   }, [id]);
 
   const handleUpdate = async () => {
@@ -68,6 +91,14 @@ export default function EventDetails() {
     }
   };
 
+  const openGoogleMaps = () => {
+    const query = encodeURIComponent(eventData.location);
+    const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    Linking.openURL(url).catch((err) =>
+      Alert.alert("Error", "Unable to open Google Maps.")
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -78,33 +109,68 @@ export default function EventDetails() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Edit Event</Text>
-      <TextInput
-        placeholder="Title"
-        value={eventData.title}
-        onChangeText={(text) => setEventData((prev) => ({ ...prev, title: text }))}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Date"
-        value={eventData.date}
-        onChangeText={(text) => setEventData((prev) => ({ ...prev, date: text }))}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Image URL"
-        value={eventData.imageUrl}
-        onChangeText={(text) => setEventData((prev) => ({ ...prev, imageUrl: text }))}
-        style={styles.input}
-      />
+      <Text style={styles.title}>{eventData.title}</Text>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailLabel}>Datum:</Text>
+        <Text style={styles.detailValue}>{eventData.date}</Text>
+      </View>
+      <View style={styles.detailContainer}>
+  <Text style={styles.detailLabel}>Lokacija:</Text>
+  <TouchableOpacity onPress={openGoogleMaps}>
+    <Text style={[styles.detailValue, styles.link]}>{eventData.location}</Text>
+  </TouchableOpacity>
+</View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailLabel}>Opis:</Text>
+        <Text style={styles.detailValue}>{eventData.description}</Text>
+      </View>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-        <Text style={styles.deleteButtonText}>Delete Event</Text>
-      </TouchableOpacity>
+      {/* Admin Features */}
+      {role === "admin" && (
+        <>
+          <Text style={styles.sectionTitle}>Edit Event</Text>
+          <TextInput
+            placeholder="Title"
+            value={eventData.title}
+            onChangeText={(text) => setEventData((prev) => ({ ...prev, title: text }))}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Date"
+            value={eventData.date}
+            onChangeText={(text) => setEventData((prev) => ({ ...prev, date: text }))}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Location"
+            value={eventData.location}
+            onChangeText={(text) => setEventData((prev) => ({ ...prev, location: text }))}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Description"
+            value={eventData.description}
+            onChangeText={(text) => setEventData((prev) => ({ ...prev, description: text }))}
+            style={styles.input}
+            multiline
+          />
+          <TextInput
+            placeholder="Image URL"
+            value={eventData.imageUrl}
+            onChangeText={(text) => setEventData((prev) => ({ ...prev, imageUrl: text }))}
+            style={styles.input}
+          />
+
+          <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
+            <Text style={styles.saveButtonText}>Save Changes</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+            <Text style={styles.deleteButtonText}>Delete Event</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 }
@@ -118,8 +184,30 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
     marginBottom: 20,
+  },
+  detailContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  detailLabel: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginRight: 5,
+  },
+  detailValue: {
+    fontSize: 16,
+    color: "#6e6e6e",
+  },
+  link: {
+    color: "#1E90FF",
+    textDecorationLine: "underline",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
   },
   input: {
     backgroundColor: "#F5F5F5",

@@ -85,7 +85,11 @@ export default function Dogadjaji() {
 
       <ScrollView>
         {events.map((event) => (
-          <View key={event.id} style={styles.eventCard}>
+          <TouchableOpacity
+            key={event.id}
+            style={styles.eventCard}
+            onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} // Navigate to event details
+          >
             <Image
               source={{ uri: event.imageUrl || "https://via.placeholder.com/80" }}
               style={styles.eventImage}
@@ -97,12 +101,15 @@ export default function Dogadjaji() {
             {role === "admin" && (
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() => handleEditEvent(event.id)}
+                onPress={(e) => {
+                  e.stopPropagation(); // Prevent parent TouchableOpacity navigation
+                  handleEditEvent(event.id);
+                }}
               >
                 <Text style={styles.editButtonText}>Uredi</Text>
               </TouchableOpacity>
             )}
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
