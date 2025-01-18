@@ -6,9 +6,12 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
+import { auth } from "../../firebaseConfig"; // Import Firebase auth instance
+import { signOut } from "firebase/auth"; // Import Firebase signOut method
 
 export default function Explore() {
   const router = useRouter();
@@ -17,7 +20,7 @@ export default function Explore() {
     { name: "Početna", icon: "home-outline", route: "/" },
     { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" },
     { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "/SavjetiRecikliranja" },
-    { name: "Događaji", icon: "account-outline", route: "/dogadjaji"},
+    { name: "Događaji", icon: "account-outline", route: "/dogadjaji" },
     { name: "Usluge odvoza", icon: "truck-outline", route: "/UslugeOdvoza" },
     { name: "Poruke", icon: "message-outline" },
     { name: "Obavijesti", icon: "bell-outline" },
@@ -29,6 +32,17 @@ export default function Explore() {
       router.push(item.route);
     } else {
       console.log(`Navigating to ${item.name}`);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Log the user out
+      Alert.alert("Odjava uspješna", "Uspješno ste odjavljeni.");
+      router.replace("/Login"); // Redirect to Login screen
+    } catch (error: any) {
+      console.error("Logout Error:", error);
+      Alert.alert("Greška", "Došlo je do greške prilikom odjave.");
     }
   };
 
@@ -54,7 +68,7 @@ export default function Explore() {
         ))}
 
         {/* Logout Option */}
-        <TouchableOpacity style={styles.logoutItem}>
+        <TouchableOpacity style={styles.logoutItem} onPress={handleLogout}>
           <Icon name="logout" size={24} color="#66BB6A" />
           <Text style={styles.logoutText}>Odjava</Text>
         </TouchableOpacity>
@@ -71,12 +85,12 @@ const styles = StyleSheet.create({
   headerImage: {
     width: "100%",
     height: 200,
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   menu: {
     flex: 1,
     paddingHorizontal: 10,
-    marginTop: -10, 
+    marginTop: -10,
   },
   menuItem: {
     flexDirection: "row",

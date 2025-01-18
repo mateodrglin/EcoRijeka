@@ -32,21 +32,30 @@ export default function Register() {
 
   const handleRegister = async () => {
     const { email, password, confirmPassword } = formData;
-
+  
+    // Validation: Ensure passwords match
     if (password !== confirmPassword) {
       Alert.alert("Greška", "Lozinke se ne podudaraju!");
       return;
     }
-
+  
+    // Validation: Ensure email and password are not empty
+    if (!email || !password) {
+      Alert.alert("Greška", "Molimo unesite važeći email i lozinku.");
+      return;
+    }
+  
     try {
       // Firebase registration logic
       await createUserWithEmailAndPassword(auth, email, password);
       Alert.alert("Registracija uspješna!", "Vaš račun je kreiran.");
       router.push("/Login"); // Redirect to login screen after successful registration
     } catch (error: any) {
+      console.error("Registration Error:", error);
       Alert.alert("Greška", error.message || "Došlo je do greške prilikom registracije.");
     }
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
