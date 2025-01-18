@@ -22,15 +22,19 @@ export default function Dogadjaji() {
       const db = getFirestore();
       const user = auth.currentUser;
 
-      if (user) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid)); // Fetch Firestore document
-          const userData = userDoc.data();
-          setRole(userData?.role || "user"); // Default to "user"
-        } catch (error) {
-          console.error("Error fetching user role:", error);
-          Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
-        }
+      // If no user is logged in, set role as null
+      if (!user) {
+        setRole(null);
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid)); // Fetch Firestore document
+        const userData = userDoc.data();
+        setRole(userData?.role || "user"); // Default to "user"
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
       }
     };
 

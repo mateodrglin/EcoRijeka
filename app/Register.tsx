@@ -88,13 +88,14 @@ export default function Register() {
   
       // Show a success message
       Alert.alert("Registracija uspješna!", "Vaš račun je kreiran. Dobrodošli!");
-      // Stay on the home page instead of redirecting
+      
+      // Redirect to the home page
+      router.push("/");
     } catch (error: any) {
       console.error("Registration Error:", error);
       setErrors([error.message || "Došlo je do greške prilikom registracije."]);
     }
   };
-  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -180,6 +181,7 @@ export default function Register() {
 
           <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
             <Text style={styles.registerButtonText}>Registracija</Text>
+            
           </TouchableOpacity>
 
           <Text style={styles.orText}>ili nastavi sa</Text>
