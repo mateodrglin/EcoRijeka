@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -8,20 +8,34 @@ import {
   Image,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth"; // Firebase auth listener
+import { auth } from "../firebaseConfig"; // Firebase auth instance
 
 export default function LoginHome() {
-  const router = useRouter(); // Initialize router for navigation
+  const router = useRouter();
+
+  useEffect(() => {
+    // Listen to the authentication state
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If the user is logged in, redirect to the main app
+        router.replace("/");
+      }
+    });
+
+    return unsubscribe; // Clean up the listener
+  }, []);
 
   return (
     <ImageBackground
-      source={require("../../assets/images/Login.png")} // Background image
+      source={require("../assets/images/Login.png")} // Background image
       style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.container}>
         {/* Logo */}
         <Image
-          source={require("../../assets/images/logo.png")} // Logo image path
+          source={require("../assets/images/logo.png")} // Logo image path
           style={styles.logo}
         />
         {/* Login Button */}
@@ -60,12 +74,6 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
     marginBottom: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#000000",
   },
   buttonPrimary: {
     backgroundColor: "#66BB6A",
