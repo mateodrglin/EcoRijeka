@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import {
   ScrollView,
@@ -8,76 +8,53 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
+import { auth } from "../firebaseConfig"; 
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      Alert.alert("Prijava uspješna!", "Dobrodošli natrag!");
+      router.push("/");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Došlo je do greške.";
+      Alert.alert("Greška", message);
+    }
+  };
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        {/* Logo */}
         <Image
-          source={require("../assets/images/logo.png")} // Adjust the path to your logo
+          source={require("../assets/images/logo.png")}
           style={styles.logo}
         />
         <Text style={styles.title}>Prijava</Text>
-
-        {/* Form Fields */}
         <View style={styles.formContainer}>
-          {/* Email Input */}
           <TextInput
             placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
             placeholderTextColor="#A9A9A9"
             style={styles.input}
           />
-
-          {/* Password Input */}
           <TextInput
-            placeholder="Password"
+            placeholder="Lozinka"
+            value={password}
+            onChangeText={setPassword}
             placeholderTextColor="#A9A9A9"
             secureTextEntry
             style={styles.input}
           />
-
-          {/* Forgot Password */}
-          <TouchableOpacity>
-            <Text style={styles.forgotPassword}>Zaboravili lozinku?</Text>
-          </TouchableOpacity>
-
-          {/* Login Button */}
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.loginButtonText}>Prijava</Text>
-          </TouchableOpacity>
-
-          {/* Continue with */}
-          <Text style={styles.orText}>ili nastavi sa</Text>
-          <View style={styles.socialButtons}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Image
-                source={{
-                  uri: "https://img.icons8.com/color/48/000000/google-logo.png",
-                }}
-                style={styles.socialIcon}
-              />
-              <Text style={styles.socialText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <Image
-                source={{
-                  uri: "https://img.icons8.com/color/48/000000/facebook.png",
-                }}
-                style={styles.socialIcon}
-              />
-              <Text style={styles.socialText}>Facebook</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Register Link */}
-          <TouchableOpacity onPress={() => router.push("/Register")}>
-            <Text style={styles.registerText}>
-              Nemate račun? <Text style={styles.registerLink}>Registriraj se</Text>
-            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -110,16 +87,13 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   formContainer: {
-    width: "100%",
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 5,
-  },
+    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", 
+    elevation: 5, 
+},
+
   input: {
     width: "100%",
     backgroundColor: "#F5F5F5",

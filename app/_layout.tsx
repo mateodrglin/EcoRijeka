@@ -1,36 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import React, { useEffect, useState } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { Stack } from "expo-router";
+import { ThemeProvider } from "@react-navigation/native";
+import { DefaultTheme, DarkTheme } from "@react-navigation/native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [user, setUser] = useState<User | null>(null); // Properly typed state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser); // Current user is User or null
+      setLoading(false);
+    });
 
-  if (!loaded) {
-    return null;
+    return () => unsubscribe(); // Cleanup the listener
+  }, []);
+
+  if (loading) {
+    return null; // Optionally, return a loading spinner or splash screen
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {user ? (
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        ) : (
+          <>
+            <Stack.Screen name="LoginHome" options={{ headerShown: false }} />
+            <Stack.Screen name="Login" />
+            <Stack.Screen name="Register" />
+          </>
+        )}
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

@@ -1,5 +1,4 @@
-import React from "react";
-import { useRouter } from "expo-router"; // Import useRouter
+import React, { useState } from "react";
 import {
   ScrollView,
   View,
@@ -8,85 +7,139 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
+import { useRouter } from "expo-router";
+import { auth } from "../firebaseConfig"; // Import Firebase auth instance
+import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase method for registration
 
 export default function Register() {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    username: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleInputChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegister = async () => {
+    const { email, password, confirmPassword } = formData;
+
+    if (password !== confirmPassword) {
+      Alert.alert("Greška", "Lozinke se ne podudaraju!");
+      return;
+    }
+
+    try {
+      // Firebase registration logic
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert("Registracija uspješna!", "Vaš račun je kreiran.");
+      router.push("/Login"); // Redirect to login screen after successful registration
+    } catch (error: any) {
+      Alert.alert("Greška", error.message || "Došlo je do greške prilikom registracije.");
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         {/* Logo */}
         <Image
-          source={require("../assets/images/logo.png")} // Adjust the path to your logo
+          source={require("../assets/images/logo.png")} // Update the path if needed
           style={styles.logo}
         />
-
-        {/* Title */}
         <Text style={styles.title}>Registracija</Text>
 
-        {/* Form Fields */}
         <View style={styles.formContainer}>
           <TextInput
             placeholder="Korisničko ime"
             placeholderTextColor="#A9A9A9"
+            value={formData.username}
+            onChangeText={(value) => handleInputChange("username", value)}
             style={styles.input}
           />
-          <TextInput placeholder="Ime" placeholderTextColor="#A9A9A9" style={styles.input} />
+          <TextInput
+            placeholder="Ime"
+            placeholderTextColor="#A9A9A9"
+            value={formData.firstName}
+            onChangeText={(value) => handleInputChange("firstName", value)}
+            style={styles.input}
+          />
           <TextInput
             placeholder="Prezime"
             placeholderTextColor="#A9A9A9"
+            value={formData.lastName}
+            onChangeText={(value) => handleInputChange("lastName", value)}
             style={styles.input}
           />
-          <TextInput placeholder="Adresa" placeholderTextColor="#A9A9A9" style={styles.input} />
-          <TextInput placeholder="Email" placeholderTextColor="#A9A9A9" style={styles.input} />
+          <TextInput
+            placeholder="Adresa"
+            placeholderTextColor="#A9A9A9"
+            value={formData.address}
+            onChangeText={(value) => handleInputChange("address", value)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#A9A9A9"
+            value={formData.email}
+            onChangeText={(value) => handleInputChange("email", value)}
+            style={styles.input}
+          />
           <TextInput
             placeholder="Broj mobitela"
             placeholderTextColor="#A9A9A9"
+            value={formData.phone}
+            onChangeText={(value) => handleInputChange("phone", value)}
             style={styles.input}
           />
           <TextInput
             placeholder="Lozinka"
             placeholderTextColor="#A9A9A9"
             secureTextEntry
+            value={formData.password}
+            onChangeText={(value) => handleInputChange("password", value)}
             style={styles.input}
           />
           <TextInput
             placeholder="Potvrda lozinke"
             placeholderTextColor="#A9A9A9"
             secureTextEntry
+            value={formData.confirmPassword}
+            onChangeText={(value) => handleInputChange("confirmPassword", value)}
             style={styles.input}
           />
 
-          {/* Register Button */}
-          <TouchableOpacity style={styles.registerButton}>
+          <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
             <Text style={styles.registerButtonText}>Registracija</Text>
           </TouchableOpacity>
 
-          {/* Continue with */}
           <Text style={styles.orText}>ili nastavi sa</Text>
           <View style={styles.socialButtons}>
             <TouchableOpacity style={styles.socialButton}>
               <Image
-                source={{
-                  uri: "https://img.icons8.com/color/48/000000/google-logo.png",
-                }}
+                source={{ uri: "https://img.icons8.com/color/48/000000/google-logo.png" }}
                 style={styles.socialIcon}
               />
               <Text style={styles.socialText}>Google</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
               <Image
-                source={{
-                  uri: "https://img.icons8.com/color/48/000000/facebook.png",
-                }}
+                source={{ uri: "https://img.icons8.com/color/48/000000/facebook.png" }}
                 style={styles.socialIcon}
               />
               <Text style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Already Have an Account */}
           <TouchableOpacity onPress={() => router.push("/Login")}>
             <Text style={styles.loginText}>
               Već imaš račun? <Text style={styles.loginLink}>Prijava</Text>
@@ -101,19 +154,19 @@ export default function Register() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center", // Center content vertically when no scrolling
-    alignItems: "center", // Center content horizontally
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: "#FFFFFF",
   },
   container: {
     width: "100%",
-    maxWidth: 400, // Optional: limits form container width for better visual
-    alignItems: "center", // Center the logo and title
+    maxWidth: 400,
   },
   logo: {
     width: 200,
     height: 200,
+    alignSelf: "center",
     marginBottom: 20,
   },
   title: {
@@ -123,13 +176,13 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   formContainer: {
-    width: "100%",
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
     padding: 20,
-    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", // For web
-    elevation: 5,
-  },
+    boxShadow: "0px 4px 5px rgba(0, 0, 0, 0.1)", 
+    elevation: 5, 
+},
+
   input: {
     width: "100%",
     backgroundColor: "#F5F5F5",
@@ -153,14 +206,14 @@ const styles = StyleSheet.create({
   },
   orText: {
     textAlign: "center",
+    marginVertical: 10,
     fontSize: 14,
     color: "#A9A9A9",
-    marginVertical: 15,
   },
   socialButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   socialButton: {
     flexDirection: "row",
@@ -180,8 +233,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   loginText: {
-    textAlign: "center",
     fontSize: 14,
+    textAlign: "center",
     color: "#A9A9A9",
   },
   loginLink: {
