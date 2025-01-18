@@ -92,11 +92,6 @@ export default function CompanyDetails() {
         <Text style={styles.infoLabel}>Email: </Text>
         {details.email}
       </Text>
-
-      {/* Bottom Button */}
-      <TouchableOpacity style={styles.messageButton}>
-        <Text style={styles.messageButtonText}>Poruke</Text>
-      </TouchableOpacity>
     </View>
   );
 }
