@@ -18,9 +18,19 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+<<<<<<< HEAD
         tabBarStyle: {
           display: 'none', // Hide the tab bar completely
         },
+=======
+        tabBarStyle: Platform.select({
+          ios: {
+            // Use a transparent background on iOS to show the blur effect
+            position: 'absolute',
+          },
+          default: {},
+        }),
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       }}>
       <Tabs.Screen
         name="index"

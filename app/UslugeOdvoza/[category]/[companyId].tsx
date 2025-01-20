@@ -1,7 +1,12 @@
 import React from "react";
+<<<<<<< HEAD
 import { View, Text, StyleSheet, TouchableOpacity, Image, Linking, Alert, ScrollView } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"; // For the back button
+=======
+import { View, Text, StyleSheet, TouchableOpacity, Image, Linking, Alert } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
 
 export default function CompanyDetails() {
   const router = useRouter();
@@ -63,6 +68,7 @@ export default function CompanyDetails() {
   };
 
   return (
+<<<<<<< HEAD
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
@@ -74,6 +80,9 @@ export default function CompanyDetails() {
         <Text style={styles.title}>{details.name}</Text>
       </View>
 
+=======
+    <View style={styles.container}>
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       {/* Logo */}
       <Image
         source={details.logo} // Dynamically use the logo
@@ -81,10 +90,17 @@ export default function CompanyDetails() {
         resizeMode="contain"
       />
 
+<<<<<<< HEAD
+=======
+      {/* Company Name */}
+      <Text style={styles.title}>{details.name}</Text>
+
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       {/* Description */}
       <Text style={styles.sectionTitle}>O industriji</Text>
       <Text style={styles.description}>{details.description}</Text>
 
+<<<<<<< HEAD
       <View style={styles.iconTextContainer}>
         <View style={styles.iconContainer}>
           <Ionicons name="logo-firefox" size={20} color="#000" />
@@ -131,10 +147,29 @@ export default function CompanyDetails() {
         <Text style={styles.signUpButtonText}>Poruke</Text>
       </TouchableOpacity>
     </ScrollView>
+=======
+      {/* Information Block */}
+      <Text style={styles.info}>
+        <Text style={styles.infoLabel}>Website: </Text>
+        <Text style={styles.link} onPress={() => handleLinkPress(details.website)}>
+          {details.website}
+        </Text>
+      </Text>
+      <Text style={styles.info}>
+        <Text style={styles.infoLabel}>Telefon: </Text>
+        {details.phone}
+      </Text>
+      <Text style={styles.info}>
+        <Text style={styles.infoLabel}>Email: </Text>
+        {details.email}
+      </Text>
+    </View>
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   );
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   header: {
     flexDirection: "row", 
     alignItems: "center", 
@@ -193,6 +228,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold", 
     color: "#333", 
   },
+=======
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -205,6 +242,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 20,
   },
+<<<<<<< HEAD
+=======
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -215,6 +261,17 @@ const styles = StyleSheet.create({
     color: "#6e6e6e",
     marginBottom: 20,
   },
+<<<<<<< HEAD
+=======
+  info: {
+    fontSize: 14,
+    color: "#000",
+    marginBottom: 10,
+  },
+  infoLabel: {
+    fontWeight: "bold",
+  },
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   link: {
     color: "#1E90FF",
     textDecorationLine: "underline",

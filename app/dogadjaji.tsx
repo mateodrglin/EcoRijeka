@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+<<<<<<< HEAD
 import { Ionicons } from "@expo/vector-icons"; 
 import { auth } from "../firebaseConfig"; 
 import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
@@ -17,22 +18,41 @@ export default function Dogadjaji() {
   const router = useRouter();
   const [role, setRole] = useState<string | null>(null); 
   const [events, setEvents] = useState<any[]>([]); 
+=======
+import { auth } from "../firebaseConfig"; // Firebase auth instance
+import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore"; // Firestore imports
+
+export default function Dogadjaji() {
+  const router = useRouter();
+  const [role, setRole] = useState<string | null>(null); // User role
+  const [events, setEvents] = useState<any[]>([]); // Events from Firestore
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
 
   useEffect(() => {
     const fetchRole = async () => {
       const db = getFirestore();
       const user = auth.currentUser;
 
+<<<<<<< HEAD
     
+=======
+      // If no user is logged in, set role as null
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       if (!user) {
         setRole(null);
         return;
       }
 
       try {
+<<<<<<< HEAD
         const userDoc = await getDoc(doc(db, "users", user.uid)); 
         const userData = userDoc.data();
         setRole(userData?.role || "user"); 
+=======
+        const userDoc = await getDoc(doc(db, "users", user.uid)); // Fetch Firestore document
+        const userData = userDoc.data();
+        setRole(userData?.role || "user"); // Default to "user"
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       } catch (error) {
         console.error("Error fetching user role:", error);
         Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
@@ -48,7 +68,11 @@ export default function Dogadjaji() {
           id: doc.id,
           ...doc.data(),
         }));
+<<<<<<< HEAD
         setEvents(eventsList); 
+=======
+        setEvents(eventsList); // Set fetched events
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       } catch (error) {
         console.error("Error fetching events:", error);
         Alert.alert("Greška", "Ne mogu dohvatiti događaje.");
@@ -65,7 +89,11 @@ export default function Dogadjaji() {
       return;
     }
 
+<<<<<<< HEAD
     router.push(`/dogadjaji/edit/${eventId}`); 
+=======
+    router.push(`/dogadjaji/edit/${eventId}`); // Navigate to edit page
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   };
 
   const handleAddEvent = () => {
@@ -74,11 +102,16 @@ export default function Dogadjaji() {
       return;
     }
 
+<<<<<<< HEAD
     router.push(`/dogadjaji/add`);
+=======
+    router.push(`/dogadjaji/add`); // Navigate to the "Add Event" page
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   };
 
   return (
     <View style={styles.container}>
+<<<<<<< HEAD
       <View style={styles.header}>
         {/* Hamburger Button */}
         <TouchableOpacity onPress={() => router.push("/explore")} style={styles.hamburgerButton}>
@@ -87,6 +120,9 @@ export default function Dogadjaji() {
         {/* Title */}
         <Text style={styles.title}>Događaji</Text>
       </View>
+=======
+      <Text style={styles.title}>Događaji</Text>
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
 
       {/* Add Event Button (Visible only to admins) */}
       {role === "admin" && (
@@ -100,7 +136,11 @@ export default function Dogadjaji() {
           <TouchableOpacity
             key={event.id}
             style={styles.eventCard}
+<<<<<<< HEAD
             onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} 
+=======
+            onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} // Navigate to event details
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
           >
             <Image
               source={{ uri: event.imageUrl || "https://via.placeholder.com/80" }}
@@ -114,7 +154,11 @@ export default function Dogadjaji() {
               <TouchableOpacity
                 style={styles.editButton}
                 onPress={(e) => {
+<<<<<<< HEAD
                   e.stopPropagation();
+=======
+                  e.stopPropagation(); // Prevent parent TouchableOpacity navigation
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
                   handleEditEvent(event.id);
                 }}
               >
@@ -134,6 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
   },
+<<<<<<< HEAD
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -148,6 +193,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
     flex: 1, 
+=======
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   },
   eventCard: {
     flexDirection: "row",

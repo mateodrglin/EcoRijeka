@@ -2,7 +2,11 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
+<<<<<<< HEAD
 import { Ionicons } from "@expo/vector-icons"; 
+=======
+
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
 export default function UslugeOdvoza() {
   const router = useRouter();
 
@@ -17,6 +21,7 @@ export default function UslugeOdvoza() {
     { id: "ulja", name: "Otpadna ulja", icon: "oil", color: "#FFA500" },
   ];
 
+<<<<<<< HEAD
 
 
   return (
@@ -29,6 +34,11 @@ export default function UslugeOdvoza() {
         <Text style={styles.title}>Usluge odvoza</Text>
       </View>
 
+=======
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Usluge odvoza</Text>
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
       <ScrollView contentContainerStyle={styles.grid}>
         {categories.map((category) => (
           <TouchableOpacity
@@ -51,6 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
   },
+<<<<<<< HEAD
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -63,11 +74,17 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     zIndex: 2, 
   },
+=======
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   title: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+<<<<<<< HEAD
     flex: 1,
+=======
+    marginBottom: 20,
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   },
   grid: {
     flexDirection: "row",

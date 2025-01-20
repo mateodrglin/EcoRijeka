@@ -14,7 +14,11 @@ import { auth } from "../../firebaseConfig";
 
 export default function AddEvent() {
   const router = useRouter();
+<<<<<<< HEAD
   const [role, setRole] = useState<string | null>(null);
+=======
+  const [role, setRole] = useState<string | null>(null); // User role
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -23,6 +27,10 @@ export default function AddEvent() {
     imageUrl: "",
   });
 
+<<<<<<< HEAD
+=======
+  // Fetch user role to ensure only admins can access
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
   useEffect(() => {
     const fetchRole = async () => {
       const db = getFirestore();
@@ -30,9 +38,15 @@ export default function AddEvent() {
 
       if (user) {
         try {
+<<<<<<< HEAD
           console.log("User ID:", user.uid); 
           const userDoc = await getDoc(doc(db, "users", user.uid));
           console.log("User Document Data:", userDoc.data()); 
+=======
+          console.log("User ID:", user.uid); // Log user ID
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          console.log("User Document Data:", userDoc.data()); // Log document data
+>>>>>>> 56b9d5d70f298f40a9ea79b6fd3bc52339c56985
           const userData = userDoc.data();
           setRole(userData?.role || "user");
         } catch (error) {
