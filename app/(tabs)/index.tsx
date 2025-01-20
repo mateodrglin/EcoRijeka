@@ -9,18 +9,18 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { getFirestore, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { Ionicons } from "@expo/vector-icons";
 
-// Define the type for an event
 interface Event {
   id: string;
   title: string;
   date: string;
-  imageUrl?: string; // imageUrl is optional
+  imageUrl?: string; 
 }
 
 export default function Home() {
   const router = useRouter();
-  const [events, setEvents] = useState<Event[]>([]); // Specify the type of the events state
+  const [events, setEvents] = useState<Event[]>([]); 
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -28,14 +28,14 @@ export default function Home() {
         const db = getFirestore();
         const eventsQuery = query(
           collection(db, "events"),
-          orderBy("createdAt", "desc"), // Sort by creation date
-          limit(3) // Fetch only the last 3 events
+          orderBy("createdAt", "desc"), 
+          limit(3) 
         );
         const eventsSnapshot = await getDocs(eventsQuery);
         const eventsList = eventsSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        })) as Event[]; // Type-cast to Event[]
+        })) as Event[]; 
         setEvents(eventsList);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -49,79 +49,114 @@ export default function Home() {
     <View style={styles.container}>
       {/* Background Image */}
       <Image
-        source={require("@/assets/images/Login.png")} // Replace with your background image path
+        source={require("@/assets/images/Login.png")} 
         style={styles.background}
       />
 
       {/* Foreground Content */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header with EcoRijeka Logo */}
-        <View style={styles.header}>
-          <Image
-            source={require("@/assets/images/logo.png")} // Replace with your logo path
-            style={styles.logo}
-          />
-          <Text style={styles.appTitle}>Novosti</Text>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={() => router.push("/explore")} style={styles.hamburgerButton}>
+            <Ionicons name="menu" size={30} color="black" />
+          </TouchableOpacity>
+
+          <View style={styles.rightHeader}>
+            <Text style={styles.appTitle}>EcoRijeka</Text>
+            <Image
+              source={require("@/assets/images/logo.png")} 
+              style={styles.logo}
+            />
+          </View>
         </View>
 
-        <View style={styles.content}>
-          {/* First Box: Last 3 Events */}
-          <View style={styles.box}>
-  <Text style={styles.boxTitle}>Provjeri događaje</Text>
-  <ScrollView
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    contentContainerStyle={styles.horizontalScrollContainer} // Ensure proper spacing
-  >
-    {events.map((event) => (
-      <TouchableOpacity
-        key={event.id}
-        style={styles.eventCard}
-        onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} // Redirect to event details
-      >
-        <Image
-          source={{ uri: event.imageUrl || "https://via.placeholder.com/120" }}
-          style={styles.eventImage}
-        />
-        <Text style={styles.eventTitle}>{event.title}</Text>
-        <Text style={styles.eventDetails}>{event.date}</Text>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
-
-  {/* Button to Show All Events */}
-  <TouchableOpacity
-    style={styles.showAllButton}
-    onPress={() => router.push("/dogadjaji")}
-  >
-    <Text style={styles.showAllButtonText}>Prikaži sve događaje</Text>
-  </TouchableOpacity>
-</View>
-
-
-          {/* Second Box: Calendar */}
-          <View style={styles.box}>
-            <Text style={styles.boxTitle}>Kalendar</Text>
-            <TouchableOpacity
-              style={styles.boxContent}
-              onPress={() => router.push("/Kalendar")}
-            >
-              <Image
-                source={require("@/assets/images/kalendar.png")} // Replace with your calendar image
-                style={styles.singleCalendarImage} // Ensures a single image is shown
-              />
-              <Text style={styles.boxText}>Provjerite raspored</Text>
-            </TouchableOpacity>
+        {/* Next Collection Card */}
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardTitle}>Sljedeća kolekcija</Text>
+          <View style={styles.cardContentRow}>
+            <Image
+              source={require("@/assets/images/green-bin.png")}
+              style={styles.binIcon}
+            />
+            <Image
+              source={require("@/assets/images/yellow-bin.png")}
+              style={styles.binIcon}
+            />
+            <View style={styles.cardTextWrapper}>
+              <Text style={styles.cardTextBold}>Petak, 10.12.</Text>
+              <Text style={styles.cardText}>Radmila Matejčića 5</Text>
+            </View>
           </View>
+        </View>
 
-          {/* Third Box: Advice */}
-          <TouchableOpacity
-            style={styles.adviceButton}
-            onPress={() => router.push("/SavjetiRecikliranja")}
+        {/* Event Section */}
+        <View style={styles.boxContainer}>
+          <Text style={styles.sectionTitle}>Provjeri događaje</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.horizontalScrollContainer}
           >
-            <Text style={styles.adviceButtonText}>
-              Kako pravilno reciklirati? Saznajte ovdje!
-            </Text>
+            {events.map((event) => (
+              <TouchableOpacity
+                key={event.id}
+                style={styles.eventCard}
+                onPress={() => router.push(`/dogadjaji/edit/${event.id}`)}
+              >
+                <Image
+                  source={{ uri: event.imageUrl || "https://via.placeholder.com/120" }}
+                  style={styles.eventImage}
+                />
+                <Text style={styles.eventTitle}>{event.title}</Text>
+                <Text style={styles.eventDetails}>{event.date}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <TouchableOpacity
+            style={styles.showAllButton}
+            onPress={() => router.push("/dogadjaji")}
+          >
+            <Text style={styles.showAllButtonText}>Prikaži sve događaje</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Calendar Section */}
+        <View style={styles.boxContainer}>
+          <Text style={styles.sectionTitle}>Kalendar</Text>
+          <TouchableOpacity
+            style={styles.boxContent}
+            onPress={() => router.push("/kalendarPopis")}
+          >
+            <Image
+              source={require("@/assets/images/kalendar.png")}
+              style={styles.singleCalendarImage}
+            />
+            <Text style={styles.boxText}>Provjerite raspored</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        {/* Recycling Tips */}
+        <View style={styles.boxContainer}>
+          <Text style={styles.sectionTitle}>Kako pravilno reciklirati?</Text>
+          <TouchableOpacity
+            style={styles.showAllButton}
+            onPress={() => router.push("/savjeti")}
+          >
+            <Text style={styles.showAllButtonText}>Saznaj više</Text>
+          </TouchableOpacity>
+        </View>
+        
+
+        {/* Report Illegal Waste Section */}
+        <View style={styles.boxContainer}>
+          <Text style={styles.sectionTitle}>Prijavi ilegalno odloženo smeće</Text>
+          <TouchableOpacity
+            style={styles.showAllButton}
+            onPress={() => router.push("/prijavaSmeca")}
+          >
+            <Text style={styles.showAllButtonText}>Prijavi smeće</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -134,55 +169,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    position: "absolute", 
+    position: "absolute",
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
     resizeMode: "cover",
-    zIndex: -1, 
+    zIndex: -1,
   },
   scrollContainer: {
     flexGrow: 1,
   },
-  header: {
+  headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     paddingVertical: 15,
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 20,
+    marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
-    backgroundColor: "rgba(245, 245, 245, 0.9)", 
+    borderColor: "#E0E0E0",
   },
-  logo: {
-    width: 140,
-    height: 140,
-    marginRight: 10,
+  hamburgerButton: {
+    padding: 5,
+  },
+  rightHeader: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   appTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#000000",
+    marginRight: 10,
   },
-  content: {
-    padding: 20,
-  },
-  box: {
-    backgroundColor: "rgba(245, 245, 245, 0.9)", 
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
-  },
-  boxTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  logo: {
+    width: 50,
+    height: 50,
   },
   boxContent: {
     alignItems: "center",
   },
   singleCalendarImage: {
-    width: "100%", 
+    width: "100%",
     height: 120,
     resizeMode: "contain",
     borderRadius: 10,
@@ -193,19 +223,71 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#6e6e6e",
   },
+  cardContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 15,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#6e6e6e",
+  },
+  cardContentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  binIcon: {
+    width: 30,
+    height: 40,
+    marginRight: 10,
+  },
+  cardTextWrapper: {
+    flex: 1,
+  },
+  cardTextBold: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000000",
+  },
+  cardText: {
+    fontSize: 14,
+    color: "#6e6e6e",
+    marginTop: 5,
+  },
+  boxContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   horizontalScrollContainer: {
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
   },
   eventCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    marginRight: 10, 
+    marginRight: 10,
     width: 160,
     overflow: "hidden",
-    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", 
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
   },
-  
-  
   eventImage: {
     width: "100%",
     height: 100,
@@ -223,7 +305,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
   },
-  
   showAllButton: {
     backgroundColor: "#66BB6A",
     marginTop: 15,
@@ -248,5 +329,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-  
 });

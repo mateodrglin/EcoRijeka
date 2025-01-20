@@ -11,8 +11,7 @@ import { useRouter } from "expo-router";
 
 export default function SavjetiRecikliranja() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const router = useRouter(); // Use the router for navigation
-
+  const router = useRouter(); 
   const options = [
     { id: "1", title: "Plastika", icon: "bottle-soda-classic-outline", text: "Savjeti za reciklažu plastike: Razvrstajte po vrstama." },
     { id: "2", title: "Papir i karton", icon: "book-outline", text: "Savjeti za reciklažu papira: Koristite obe strane papira." },
@@ -40,7 +39,7 @@ export default function SavjetiRecikliranja() {
                 styles.option,
                 selectedOption === option.id && styles.selectedOption,
               ]}
-              onPress={() => setSelectedOption((prev) => (prev === option.id ? null : option.id))} // Toggle selection
+              onPress={() => setSelectedOption((prev) => (prev === option.id ? null : option.id))} 
             >
               <Icon name={option.icon} size={24} color="#66BB6A" style={styles.optionIcon} />
               <Text style={styles.optionText}>{option.title}</Text>
@@ -72,11 +71,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     color: "#000000",
-    marginTop: 40, // To account for the back button
+    marginTop: 40, 
   },
   optionsContainer: {
     marginBottom: 20,
-    marginTop: 20, // To avoid overlapping with the back button
+    marginTop: 20, 
   },
   optionWrapper: {
     marginBottom: 10,

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
-
+import { Ionicons } from "@expo/vector-icons"; 
 export default function UslugeOdvoza() {
   const router = useRouter();
 
@@ -17,9 +17,18 @@ export default function UslugeOdvoza() {
     { id: "ulja", name: "Otpadna ulja", icon: "oil", color: "#FFA500" },
   ];
 
+
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Usluge odvoza</Text>
+      {/* Header with Hamburger */}
+      <View style={styles.header}>
+      <TouchableOpacity onPress={() => router.push("/explore")} style={styles.hamburgerButton}>
+          <Ionicons name="menu" size={30} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Usluge odvoza</Text>
+      </View>
+
       <ScrollView contentContainerStyle={styles.grid}>
         {categories.map((category) => (
           <TouchableOpacity
@@ -42,11 +51,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    position: "relative", 
+  },
+  hamburgerButton: {
+    padding: 10,
+    position: "absolute",
+    paddingTop: 20,
+    zIndex: 2, 
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    flex: 1,
   },
   grid: {
     flexDirection: "row",

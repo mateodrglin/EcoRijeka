@@ -9,25 +9,27 @@ import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [user, setUser] = useState<User | null>(null); // Properly typed state
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Current user is User or null
+      setUser(currentUser);
       setLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup the listener
+    return () => unsubscribe(); 
   }, []);
 
   if (loading) {
-    return null; // Optionally, return a loading spinner or splash screen
+    return null; 
   }
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack screenOptions={{
+          headerShown: false, 
+        }}>
         {user ? (
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         ) : (
@@ -37,6 +39,8 @@ export default function RootLayout() {
             <Stack.Screen name="Register" />
           </>
         )}
+
+        
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

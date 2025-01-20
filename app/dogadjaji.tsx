@@ -9,29 +9,30 @@ import {
   Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { auth } from "../firebaseConfig"; // Firebase auth instance
-import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore"; // Firestore imports
+import { Ionicons } from "@expo/vector-icons"; 
+import { auth } from "../firebaseConfig"; 
+import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
 
 export default function Dogadjaji() {
   const router = useRouter();
-  const [role, setRole] = useState<string | null>(null); // User role
-  const [events, setEvents] = useState<any[]>([]); // Events from Firestore
+  const [role, setRole] = useState<string | null>(null); 
+  const [events, setEvents] = useState<any[]>([]); 
 
   useEffect(() => {
     const fetchRole = async () => {
       const db = getFirestore();
       const user = auth.currentUser;
 
-      // If no user is logged in, set role as null
+    
       if (!user) {
         setRole(null);
         return;
       }
 
       try {
-        const userDoc = await getDoc(doc(db, "users", user.uid)); // Fetch Firestore document
+        const userDoc = await getDoc(doc(db, "users", user.uid)); 
         const userData = userDoc.data();
-        setRole(userData?.role || "user"); // Default to "user"
+        setRole(userData?.role || "user"); 
       } catch (error) {
         console.error("Error fetching user role:", error);
         Alert.alert("Greška", "Ne mogu dohvatiti podatke korisnika.");
@@ -47,7 +48,7 @@ export default function Dogadjaji() {
           id: doc.id,
           ...doc.data(),
         }));
-        setEvents(eventsList); // Set fetched events
+        setEvents(eventsList); 
       } catch (error) {
         console.error("Error fetching events:", error);
         Alert.alert("Greška", "Ne mogu dohvatiti događaje.");
@@ -64,7 +65,7 @@ export default function Dogadjaji() {
       return;
     }
 
-    router.push(`/dogadjaji/edit/${eventId}`); // Navigate to edit page
+    router.push(`/dogadjaji/edit/${eventId}`); 
   };
 
   const handleAddEvent = () => {
@@ -73,12 +74,19 @@ export default function Dogadjaji() {
       return;
     }
 
-    router.push(`/dogadjaji/add`); // Navigate to the "Add Event" page
+    router.push(`/dogadjaji/add`);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Događaji</Text>
+      <View style={styles.header}>
+        {/* Hamburger Button */}
+        <TouchableOpacity onPress={() => router.push("/explore")} style={styles.hamburgerButton}>
+                  <Ionicons name="menu" size={30} color="black" />
+                </TouchableOpacity>
+        {/* Title */}
+        <Text style={styles.title}>Događaji</Text>
+      </View>
 
       {/* Add Event Button (Visible only to admins) */}
       {role === "admin" && (
@@ -92,7 +100,7 @@ export default function Dogadjaji() {
           <TouchableOpacity
             key={event.id}
             style={styles.eventCard}
-            onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} // Navigate to event details
+            onPress={() => router.push(`/dogadjaji/edit/${event.id}`)} 
           >
             <Image
               source={{ uri: event.imageUrl || "https://via.placeholder.com/80" }}
@@ -106,7 +114,7 @@ export default function Dogadjaji() {
               <TouchableOpacity
                 style={styles.editButton}
                 onPress={(e) => {
-                  e.stopPropagation(); // Prevent parent TouchableOpacity navigation
+                  e.stopPropagation();
                   handleEditEvent(event.id);
                 }}
               >
@@ -126,11 +134,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  hamburgerButton: {
+    padding: 10,
+    marginRight: 10,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
+    textAlign: "left",
+    flex: 1, 
   },
   eventCard: {
     flexDirection: "row",

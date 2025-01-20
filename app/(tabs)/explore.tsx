@@ -22,7 +22,7 @@ export default function Explore() {
       setUser(currentUser); // Set logged-in user
     });
 
-    return () => unsubscribe(); // Cleanup listener
+    return () => unsubscribe(); 
   }, []);
 
   const handleLogout = async () => {
@@ -37,10 +37,16 @@ export default function Explore() {
 
   const menuItems = [
     { name: "Početna", icon: "home-outline", route: "/" },
-    { name: "Kalendar", icon: "calendar-month-outline", route: "/Kalendar" },
-    { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "/SavjetiRecikliranja" },
+    { name: "Kalendar", icon: "calendar-month-outline", route: "/kalendarPopis" },
+    { name: "Savjeti recikliranja", icon: "lightbulb-outline", route: "/savjeti" },
     { name: "Događaji", icon: "account-outline", route: "/dogadjaji" },
     { name: "Usluge odvoza", icon: "truck-outline", route: "/UslugeOdvoza" },
+    { name: "Poruke", icon: "chat", route: "/poruke" },
+    { name: "Obavjesti", icon: "bell", route: "/obavjesti" },
+    { name: "Postavke", icon: "wrench-outline", route: "/postavke" },
+
+
+
     ...(user
       ? [] // Hide Login/Register if logged in
       : [{ name: "Prijava/Registracija", icon: "account-circle-outline", route: "/LoginHome" }]),
